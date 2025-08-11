@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNAP Benefits Impact Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .chart-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .chart-header h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-left: 15px;
+        }
+
+        .chart-icon {
+            font-size: 2rem;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chart-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        #chart-space {
+            border: 2px solid #e8f4f8;
+            border-radius: 15px;
+            min-height: 600px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status {
+            background: linear-gradient(45deg, #e8f5e8, #d4edda);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+            font-weight: 500;
+            color: #155724;
+        }
+
+        .info-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .info-header h2 {
+            font-size: 1.8rem;
+            margin-left: 15px;
+        }
+
+        .info-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .info-item h3 {
+            margin-bottom: 10px;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .info-item p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .chart-section, .info-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ SNAP Benefits Impact Analysis</h1>
+            <p>Understanding the impact of proposed policy changes on families across the United States</p>
+        </div>
+
+        <div class="chart-section">
+            <div class="chart-header">
+                <div class="chart-icon">📊</div>
+                <h2>State-by-State Impact</h2>
+            </div>
+            
+            <p class="chart-description">
+                This visualization shows the estimated number of families (in thousands) that would lose some or all of their SNAP (Supplemental Nutrition Assistance Program) benefits under proposed policy changes. The data is sorted by impact, with states experiencing the highest number of affected families shown first.
+            </p>
+            
+            <div class="status">
+                <strong>Status:</strong> <span id="status">Loading...</span>
+            </div>
+            
+            <div id="chart-space"></div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-header">
+                <div class="chart-icon">✅</div>
+                <h2>About This Visualization</h2>
+            </div>
+            
+            <div class="info-content">
+                <div class="info-item">
+                    <h3>What is SNAP?</h3>
+                    <p>The Supplemental Nutrition Assistance Program provides food-purchasing assistance to low-income families and individuals.</p>
+                </div>
+                
+                <div class="info-item">
+                    <h3>Data Source</h3>
+                    <p>Analysis of proposed policy changes and their estimated impact on SNAP benefits across all 50 states.</p>
+                </div>
+                
+                <div class="info-item">
+                    <h3>Interactive Features</h3>
+                    <p>Hover over any bar to see the exact number of families affected in that state.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script>
+        // Show status
+        document.getElementById('status').textContent = 'D3.js loaded, version: ' + d3.version;
+        
+        // Test data loading
+        console.log('Starting data load...');
+        
+        d3.csv("data/snap_cuts_state_impact_CLEAN_CSV.csv")
+            .then(data => {
+                console.log('Data loaded successfully:', data);
+                document.getElementById('status').textContent = 'Data loaded: ' + data.length + ' states';
+                
+                // Process data
+                data.forEach(d => {
+                    d.Families_losing_some_or_all_SNAP_benefits_1000s = +d.Families_losing_some_or_all_SNAP_benefits_1000s;
+                });
+                
+                // Sort by impact
+                const sortedData = data.sort((a, b) => 
+                    b.Families_losing_some_or_all_SNAP_benefits_1000s - a.Families_losing_some_or_all_SNAP_benefits_1000s
+                );
+                
+                console.log('Sorted data:', sortedData);
+                
+                // Create chart
+                const width = 1000;
+                const height = 600;
+                const margin = { top: 40, right: 40, bottom: 120, left: 100 };
+                const chartWidth = width - margin.left - margin.right;
+                const chartHeight = height - margin.top - margin.bottom;
+                
+                const svg = d3.select("#chart-space")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", `translate(${margin.left},${margin.top})`);
+                
+                // Create scales
+                const xScale = d3.scaleBand()
+                    .domain(sortedData.map(d => d.State))
+                    .range([0, chartWidth])
+                    .padding(0.3);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, d3.max(sortedData, d => d.Families_losing_some_or_all_SNAP_benefits_1000s)])
+                    .range([chartHeight, 0]);
+                
+                // Draw bars
+                svg.selectAll("rect")
+                    .data(sortedData)
+                    .join("rect")
+                    .attr("x", d => xScale(d.State))
+                    .attr("y", d => yScale(d.Families_losing_some_or_all_SNAP_benefits_1000s))
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", d => chartHeight - yScale(d.Families_losing_some_or_all_SNAP_benefits_1000s))
+                    .attr("fill", "#e74c3c")
+                    .attr("rx", 4)
+                    .attr("ry", 4)
+                    .on("mouseover", function(event, d) {
+                        d3.select(this).attr("fill", "#f39c12");
+                        svg.append("text")
+                            .attr("class", "tooltip")
+                            .attr("x", xScale(d.State) + xScale.bandwidth() / 2)
+                            .attr("y", yScale(d.Families_losing_some_or_all_SNAP_benefits_1000s) - 15)
+                            .text(d.Families_losing_some_or_all_SNAP_benefits_1000s.toLocaleString() + " families")
+                            .style("font-size", "14px")
+                            .style("font-weight", "bold")
+                            .style("fill", "#2c3e50")
+                            .attr("text-anchor", "middle");
+                    })
+                    .on("mouseout", function(event, d) {
+                        d3.select(this).attr("fill", "#e74c3c");
+                        svg.select(".tooltip").remove();
+                    });
+                
+                // Draw axes
+                svg.append("g")
+                    .attr("transform", `translate(0,${chartHeight})`)
+                    .call(d3.axisBottom(xScale))
+                    .selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("dx", "-.8em")
+                    .attr("dy", ".15em")
+                    .attr("transform", "rotate(-45)")
+                    .style("font-size", "12px")
+                    .style("fill", "#666");
+                
+                svg.append("g")
+                    .call(d3.axisLeft(yScale))
+                    .selectAll("text")
+                    .style("font-size", "12px")
+                    .style("fill", "#666");
+                
+                // Add labels
+                svg.append("text")
+                    .attr("x", chartWidth / 2)
+                    .attr("y", chartHeight + margin.bottom - 20)
+                    .text("State")
+                    .style("text-anchor", "middle")
+                    .style("font-size", "16px")
+                    .style("font-weight", "bold")
+                    .style("fill", "#2c3e50");
+                
+                svg.append("text")
+                    .attr("x", -chartHeight / 2)
+                    .attr("y", -margin.left + 20)
+                    .text("Families Losing SNAP Benefits (thousands)")
+                    .style("transform", "rotate(-90deg)")
+                    .style("text-anchor", "middle")
+                    .style("font-size", "16px")
+                    .style("font-weight", "bold")
+                    .style("fill", "#2c3e50");
+                
+                document.getElementById('status').textContent = 'Chart created successfully! Hover over bars to see details.';
+                console.log('Chart created successfully!');
+                
+            })
+            .catch(error => {
+                console.error('Error loading data:', error);
+                document.getElementById('status').textContent = 'ERROR: ' + error.message;
+                document.getElementById('chart-space').innerHTML = 
+                    '<p style="color: red; padding: 20px; text-align: center; font-size: 18px;">Error loading data: ' + error.message + '</p>';
+            });
+    </script>
+</body>
+</html>

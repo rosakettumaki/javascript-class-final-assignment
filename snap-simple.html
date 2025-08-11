@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SNAP Chart - Simple Working Version</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; text-align: center; }
+        #chart-space { 
+            border: 2px solid #ddd; 
+            min-height: 500px; 
+            margin: 20px 0;
+            background: white;
+        }
+        .status { 
+            background: #e8f5e8; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 5px;
+            border-left: 4px solid #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ SNAP Benefits Impact Chart</h1>
+        
+        <div class="status">
+            <strong>Status:</strong> <span id="status">Loading...</span>
+        </div>
+        
+        <div id="chart-space"></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script>
+        // Show status
+        document.getElementById('status').textContent = 'D3.js loaded, version: ' + d3.version;
+        
+        // Test data loading
+        console.log('Starting data load...');
+        
+        d3.csv("data/snap_cuts_state_impact_CLEAN_CSV.csv")
+            .then(data => {
+                console.log('Data loaded successfully:', data);
+                document.getElementById('status').textContent = 'Data loaded: ' + data.length + ' states';
+                
+                // Process data
+                data.forEach(d => {
+                    d.Families_losing_some_or_all_SNAP_benefits_1000s = +d.Families_losing_some_or_all_SNAP_benefits_1000s;
+                });
+                
+                // Sort by impact
+                const sortedData = data.sort((a, b) => 
+                    b.Families_losing_some_or_all_SNAP_benefits_1000s - a.Families_losing_some_or_all_SNAP_benefits_1000s
+                );
+                
+                console.log('Sorted data:', sortedData);
+                
+                // Create chart
+                const width = 900;
+                const height = 500;
+                const margin = { top: 30, right: 30, bottom: 100, left: 80 };
+                const chartWidth = width - margin.left - margin.right;
+                const chartHeight = height - margin.top - margin.bottom;
+                
+                const svg = d3.select("#chart-space")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", `translate(${margin.left},${margin.top})`);
+                
+                // Create scales
+                const xScale = d3.scaleBand()
+                    .domain(sortedData.map(d => d.State))
+                    .range([0, chartWidth])
+                    .padding(0.3);
+                
+                const yScale = d3.scaleLinear()
+                    .domain([0, d3.max(sortedData, d => d.Families_losing_some_or_all_SNAP_benefits_1000s)])
+                    .range([chartHeight, 0]);
+                
+                // Draw bars
+                svg.selectAll("rect")
+                    .data(sortedData)
+                    .join("rect")
+                    .attr("x", d => xScale(d.State))
+                    .attr("y", d => yScale(d.Families_losing_some_or_all_SNAP_benefits_1000s))
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", d => chartHeight - yScale(d.Families_losing_some_or_all_SNAP_benefits_1000s))
+                    .attr("fill", "#e74c3c")
+                    .on("mouseover", function(event, d) {
+                        d3.select(this).attr("fill", "#f39c12");
+                        svg.append("text")
+                            .attr("class", "tooltip")
+                            .attr("x", xScale(d.State) + xScale.bandwidth() / 2)
+                            .attr("y", yScale(d.Families_losing_some_or_all_SNAP_benefits_1000s) - 10)
+                            .text(d.Families_losing_some_or_all_SNAP_benefits_1000s.toLocaleString() + " families")
+                            .style("font-size", "12px")
+                            .style("font-weight", "bold")
+                            .attr("text-anchor", "middle");
+                    })
+                    .on("mouseout", function(event, d) {
+                        d3.select(this).attr("fill", "#e74c3c");
+                        svg.select(".tooltip").remove();
+                    });
+                
+                // Draw axes
+                svg.append("g")
+                    .attr("transform", `translate(0,${chartHeight})`)
+                    .call(d3.axisBottom(xScale))
+                    .selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("dx", "-.8em")
+                    .attr("dy", ".15em")
+                    .attr("transform", "rotate(-45)");
+                
+                svg.append("g")
+                    .call(d3.axisLeft(yScale));
+                
+                // Add labels
+                svg.append("text")
+                    .attr("x", chartWidth / 2)
+                    .attr("y", chartHeight + margin.bottom - 10)
+                    .text("State")
+                    .style("text-anchor", "middle");
+                
+                svg.append("text")
+                    .attr("x", -chartHeight / 2)
+                    .attr("y", -margin.left + 15)
+                    .text("Families Losing SNAP Benefits (thousands)")
+                    .style("transform", "rotate(-90deg)")
+                    .style("text-anchor", "middle");
+                
+                document.getElementById('status').textContent = 'Chart created successfully! Hover over bars to see details.';
+                console.log('Chart created successfully!');
+                
+            })
+            .catch(error => {
+                console.error('Error loading data:', error);
+                document.getElementById('status').textContent = 'ERROR: ' + error.message;
+                document.getElementById('chart-space').innerHTML = 
+                    '<p style="color: red; padding: 20px;">Error loading data: ' + error.message + '</p>';
+            });
+    </script>
+</body>
+</html>

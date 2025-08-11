@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            h1 {
+                margin-top: 3em;
+                color: cornflowerblue;
+                
+            }
+            h2 {
+                background-color: cornflowerblue;
+                color:white;
+                display: inline-block;   
+            }
+            h3 {
+                margin-top: 2em;
+            }
+            code {
+                background: #fff880;
+            }
+
+            #container {
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            svg {
+                margin: 0 auto;
+                display: block;
+            }
+
+            .snippet {
+                font-family: 'Courier New', Courier, monospace;
+            }
+
+            .subtitle {
+                color:gray;
+            }
+
+            .annotation{
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: x-small;
+                
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            
+
+            <h1>Building D3 charts</h1>
+            <br>
+            <i class="subtitle">Data in this exercise sourced from <a href="https://www.unhcr.org/refugee-statistics/download/?url=9L8KNz">UNHCR's Refuge Data Finder</a></i>
+            
+            <p>Making charts in D3 means basically assembling a bunch of elements into something chart-like.</p>
+            <p>What elements do we need to put a chart together? </p>
+            <ul>
+                <li>SVG holder and its dimensions</li>
+                <li>Dimensions of the chart itself (our chart won't take up the whole SVG space, because we need to make room the axes ticks and labels, plus the chart looks a little nicer with margins)</li>
+                <li>Axes</li>
+                <li>Data elements: dots, lines, bars, etc</li>
+                <li>Labels: title, axes labels, annotations if need be</li>
+            </ul>
+            <h2>Single line</h2>
+            <code>01-single-line.js</code>
+            <p>In this example, we're using <a href="https://stackoverflow.com/questions/10086167/d3-how-to-deal-with-json-data-structures"><span class="snippet">.datum()</span></a> instead of <span class="snippet">.data()</span>, because we're making one SVG element (the line) instead of multiple elements (e.g. multiple circles in a scatterplot).</p>
+            <p>We also use <a href="https://d3js.org/d3-axis"><span class="snippet">d3.axisLeft()</span> and <span class="snippet">d3.axisBottom</span></a>, which determine placement of the <i>ticks</i> relative to the line.</p>
+            <p>We wrap all of the chart making into a function called <span class="snippet">ready</span>, which is a way to make sure our data loads first before we draw anything with it.</p>
+            <h3>Refugees to the United States from Russia</h3>
+            <div id="single-line"></div>
+
+          
+            
+            
+            <h2>A line chart with multiple lines (wide data)</h2>
+            <code>02-multiple-lines-wide.js</code>
+            <p>An imperfect but understandable way to use skills from the last chart to produce multiple lines <strong>if you have wide data</strong>.</p>
+
+            
+            <h3>Refugees to the USA from several countries</h3>
+            <div id="multiple-lines-wide"></div>
+
+            <h2>A line chart with multiple lines (long data)</h2>
+            <code>03-multiple-lines.js</code>
+            <p>This examples uses <span class="snippet">.data()</span> this time, since we're making multiple SVG elements (in this case, multiple lines) with a single method chain.</p>
+            <p>It also uses <span class="snippet"><a href="https://d3js.org/d3-array/group">d3.groups()</a></span> to combine rows and draw multiple lines.</p>
+            
+
+            <h3>Refugees to the United States from several countries</h3>
+            <p class="subtitle">Afghanistan, El Salvador, Myanmar, Russia, and Sudan</p>
+            <div id="multiple-lines"></div>
+
+            <h2>Small multiples</h2>
+            <code>04-small-multiples.js</code>
+            <p>This example zooms out one level and uses the <span class="snippet">.each()</span> method on a grouped object to create small multiples. It makes multiple SVG groupings instead of putting everything in one SVG.</p>
+
+            <p>It also uses <span class="snippet">d3.select(this)</span>, which tells the object to refer to itself... it makes more sense in context!</p>
+            
+            <p>The y-axis in each mini chart is simplified through the <span class="snippet">.ticks()</span> method.</p>
+
+            <div id="small-multiples"></div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+        <script src="01-single-line.js"></script>
+        <script src="02-multiple-lines-wide.js"></script>
+        <script src="03-multiple-lines.js"></script>
+        <script src="04-small-multiples.js"></script>
+        
+    </body>
+</html>

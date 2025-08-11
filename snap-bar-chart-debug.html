@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNAP Chart Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #chart-space { border: 2px solid #ccc; min-height: 400px; }
+        .debug-info { background: #f0f0f0; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>SNAP Chart Debug</h1>
+    <div class="debug-info">
+        <p>D3.js version: <span id="d3-version">Loading...</span></p>
+        <p>Data status: <span id="data-status">Waiting...</span></p>
+    </div>
+    <div id="chart-space"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script>
+        // Check D3.js
+        document.getElementById('d3-version').textContent = d3.version;
+        
+        // Test data loading
+        d3.csv("data/snap_cuts_state_impact_CLEAN_CSV.csv")
+            .then(data => {
+                document.getElementById('data-status').textContent = `Loaded ${data.length} rows`;
+                console.log("Data loaded:", data);
+                
+                // Simple test chart
+                const svg = d3.select("#chart-space")
+                    .append("svg")
+                    .attr("width", 800)
+                    .attr("height", 400);
+                
+                const bars = svg.selectAll("rect")
+                    .data(data.slice(0, 10)) // First 10 states
+                    .join("rect")
+                    .attr("x", (d, i) => i * 80)
+                    .attr("y", d => 400 - (d.Families_losing_some_or_all_SNAP_benefits_1000s / 1000))
+                    .attr("width", 70)
+                    .attr("height", d => d.Families_losing_some_or_all_SNAP_benefits_1000s / 1000)
+                    .attr("fill", "red");
+                
+                console.log("Chart created!");
+            })
+            .catch(error => {
+                document.getElementById('data-status').textContent = `Error: ${error.message}`;
+                console.error("Error loading data:", error);
+            });
+    </script>
+</body>
+</html>

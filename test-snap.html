@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test SNAP Chart</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #chart-space { border: 2px solid #ccc; min-height: 400px; }
+    </style>
+</head>
+<body>
+    <h1>Test SNAP Chart</h1>
+    <div id="chart-space"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script>
+        console.log("D3 version:", d3.version);
+        
+        // Test data loading
+        d3.csv("data/snap_cuts_state_impact_CLEAN_CSV.csv")
+            .then(data => {
+                console.log("Data loaded successfully:", data);
+                
+                // Create simple chart
+                const svg = d3.select("#chart-space")
+                    .append("svg")
+                    .attr("width", 800)
+                    .attr("height", 400);
+                
+                // Simple bars
+                svg.selectAll("rect")
+                    .data(data.slice(0, 10))
+                    .join("rect")
+                    .attr("x", (d, i) => i * 80)
+                    .attr("y", d => 400 - (d.Families_losing_some_or_all_SNAP_benefits_1000s / 1000))
+                    .attr("width", 70)
+                    .attr("height", d => d.Families_losing_some_or_all_SNAP_benefits_1000s / 1000)
+                    .attr("fill", "red");
+                
+                console.log("Chart created!");
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById('chart-space').innerHTML = 
+                    '<p style="color: red;">Error loading data: ' + error.message + '</p>';
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>People losing SNAP benefits due to President Trump's Big, Beautiful Bill</title>
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                margin: 20px;
+                background-color: #f5f5f5;
+            }
+            h1 {
+                color: #2c3e50;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            h2 {
+                color: #34495e;
+                margin-top: 40px;
+                margin-bottom: 20px;
+                padding: 10px;
+                background-color: #ecf0f1;
+                border-radius: 5px;
+            }
+            .subtitle {
+                color: #7f8c8d;
+                text-align: center;
+                margin-bottom: 30px;
+                font-style: italic;
+            }
+            #container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .chart-section {
+                margin-bottom: 50px;
+                padding: 20px;
+                border: 1px solid #ecf0f1;
+                border-radius: 8px;
+            }
+            svg {
+                margin: 0 auto;
+                display: block;
+            }
+            .tooltip {
+                font-weight: bold;
+                font-size: 14px;
+            }
+            .info-box {
+                margin-top: 20px;
+                padding: 15px;
+                background-color: #ecf0f1;
+                border-radius: 5px;
+                border-left: 4px solid #3498db;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <h1>Food Insecurity & SNAP Benefits Analysis</h1>
+            <p class="subtitle">Understanding the relationship between unemployment, food supply gaps, and SNAP benefit impacts across the United States</p>
+            
+            <!-- SNAP Benefits Chart Section -->
+            <div class="chart-section">
+                <h2>📊 SNAP Benefits Impact by State</h2>
+                <p>This chart shows the estimated number of families (in thousands) that would lose some or all of their SNAP benefits under proposed policy changes.</p>
+                <div id="chart-space"></div>
+            </div>
+            
+            <!-- Scatterplot Section -->
+            <div class="chart-section">
+                <h2>🔍 Unemployment Rate vs. Food Supply Gap</h2>
+                <p>This scatterplot explores the relationship between unemployment rates and food supply gaps across New York City neighborhoods. Each point represents a neighborhood, with size indicating vulnerability and color showing the borough.</p>
+                <div id="scatterplot-space"></div>
+            </div>
+            
+            <div class="info-box">
+                <h3>📈 About These Visualizations</h3>
+                <p><strong>Chart 1:</strong> SNAP (Supplemental Nutrition Assistance Program) benefit impact analysis showing how many families would be affected by proposed cuts.</p>
+                <p><strong>Chart 2:</strong> Analysis of food insecurity patterns in NYC neighborhoods, examining the correlation between unemployment rates and food supply gaps.</p>
+                <p><strong>Data Sources:</strong> SNAP benefit impact analysis and NYC neighborhood food insecurity data (2024)</p>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+        <script src="snap-bar-chart.js"></script>
+        <script src="unemployment-scatterplot.js"></script>
+    </body>
+</html> 

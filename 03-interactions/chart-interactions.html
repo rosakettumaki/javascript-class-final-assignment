@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bar Chart</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      h1 {
+        margin-top: 3em;
+        color: darkorchid;
+      }
+      h2 {
+        background-color: darkorchid;
+        color: white;
+        display: inline-block;
+      }
+
+      code {
+        background: #fff880;
+      }
+
+      #container {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .snippet {
+        font-family: 'Courier New', Courier, monospace;
+      }
+
+      .tooltip {
+        fill: black;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .data-source {
+        font-family: Arial, Helvetica, sans-serif;
+        color: gray;
+        font-size: small;
+      }
+      .annotation {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: x-small;
+      }
+
+      /* Highlights */
+
+      .VEN {
+        fill: orange;
+        opacity: 1;
+      }
+      .CHN {
+        fill: orange;
+        opacity: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <h1>MY FINAL ASSIGNEMENT</h1>
+<p>Some examples that show how to use the techniques from <span class="snippet">intro-interactions.html</span> in a D3 data visualization.</p>
+   
+
+      <h2>Bar chart</h2>
+      <code>04-full-bar-with-hover.js</code>
+      <p>Hover over each bar to see the number of asylum seekers per country. The bar also changes color when hovered over.</p>
+
+      <p>The annotation comes from a new field in the data that's been created called <span class="snippet">Comma Value</span>, which uses regex inserts commas into the number value.</p>
+      <h3>Countries with the highest numbers of asylum seekers to the United States in 2024</h3>
+
+      <div id="chart-space"></div>
+
+      <p class="data-source">
+        Source:
+        <a
+          href="https://www.unhcr.org/refugee-statistics/download?data_finder%5BdataGroup%5D=displacement&data_finder%5Bdataset%5D=population&data_finder%5BdisplayType%5D=totals&data_finder%5BpopulationType%5D%5B%5D=REF&data_finder%5BpopulationType%5D%5B%5D=ASY&data_finder%5BpopulationType%5D%5B%5D=IDP&data_finder%5BpopulationType%5D%5B%5D=OIP&data_finder%5BpopulationType%5D%5B%5D=STA&data_finder%5BpopulationType%5D%5B%5D=HST&data_finder%5BpopulationType%5D%5B%5D=OOC&data_finder%5Byear__filterType%5D=range&data_finder%5Byear__rangeFrom%5D=2019&data_finder%5Byear__rangeTo%5D=2024&data-finder=on&data_finder%5Bcoo__displayType%5D=all&data_finder%5Bcoa__displayType%5D=custom&data_finder%5Bcoa__country%5D%5B%5D=202&data_finder%5Byear__%5D=&data_finder%5Bcoo__%5D=&data_finder%5Bcoa__%5D=&data_finder%5Badvanced__%5D=&data_finder%5Bsubmit%5D="
+          >United Nations High Commissioner for Refugees</a
+        >
+      </p>
+
+      <h2>Scatterplot</h2>
+      <code>05-scatterplot-interactions.js</code>
+      <p>Each circle is enlarged and returns a country name when hovered over. The circles also turn orange when you click on them.</p>
+      <h3>Countries with the highest numbers of asylum seekers to the United States in 2024</h3>
+      <div id="scatterplot-int"></div>
+      <p class="data-source">
+        Source:
+        <a
+          href="https://www.unhcr.org/refugee-statistics/download?data_finder%5BdataGroup%5D=displacement&data_finder%5Bdataset%5D=population&data_finder%5BdisplayType%5D=totals&data_finder%5BpopulationType%5D%5B%5D=REF&data_finder%5BpopulationType%5D%5B%5D=ASY&data_finder%5BpopulationType%5D%5B%5D=IDP&data_finder%5BpopulationType%5D%5B%5D=OIP&data_finder%5BpopulationType%5D%5B%5D=STA&data_finder%5BpopulationType%5D%5B%5D=HST&data_finder%5BpopulationType%5D%5B%5D=OOC&data_finder%5Byear__filterType%5D=range&data_finder%5Byear__rangeFrom%5D=2019&data_finder%5Byear__rangeTo%5D=2024&data-finder=on&data_finder%5Bcoo__displayType%5D=all&data_finder%5Bcoa__displayType%5D=custom&data_finder%5Bcoa__country%5D%5B%5D=202&data_finder%5Byear__%5D=&data_finder%5Bcoo__%5D=&data_finder%5Bcoa__%5D=&data_finder%5Badvanced__%5D=&data_finder%5Bsubmit%5D="
+          >United Nations High Commissioner for Refugees</a
+        >
+      </p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="04-full-bar-with-hover.js"></script>
+    <script src="05-scatterplot-interactions.js"></script>
+  </body>
+</html>

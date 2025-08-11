@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNAP vs Poverty Correlation Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .chart-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .chart-header h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-left: 15px;
+        }
+
+        .chart-icon {
+            font-size: 2rem;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chart-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        #scatterplot-int {
+            border: 2px solid #e8f4f8;
+            border-radius: 15px;
+            min-height: 600px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status {
+            background: linear-gradient(45deg, #e8f5e8, #d4edda);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+            font-weight: 500;
+            color: #155724;
+        }
+
+        .info-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .info-header h2 {
+            font-size: 1.8rem;
+            margin-left: 15px;
+        }
+
+        .info-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .info-item h3 {
+            margin-bottom: 10px;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .info-item p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .correlation-info {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #f39c12;
+        }
+
+        .correlation-info h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .correlation-info p {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .chart-section, .info-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 SNAP vs Poverty Correlation</h1>
+            <p>Exploring the relationship between SNAP participation and poverty across congressional districts</p>
+        </div>
+
+        <div class="chart-section">
+            <div class="chart-header">
+                <div class="chart-icon">🔍</div>
+                <h2>Correlation Analysis</h2>
+            </div>
+
+            <p class="chart-description">
+                This scatterplot shows how poverty levels impact SNAP participation, with the percentage of SNAP households living in poverty (x-axis) and the percentage of households receiving SNAP benefits (y-axis) across all congressional districts. Each point represents a district, and the pattern reveals how increasing poverty affects food assistance participation. <strong>Red dots represent New York congressional districts, while blue dots represent all other states.</strong>
+            </p>
+
+            <div class="status">
+                <strong>Status:</strong> <span id="status">Loading...</span>
+            </div>
+
+            <div id="scatterplot-int"></div>
+        </div>
+
+        <div class="correlation-info">
+            <h3>💡 What This Visualization Reveals</h3>
+            <p>
+                <strong>Positive Correlation:</strong> If points trend upward from left to right, it suggests that higher poverty rates among SNAP households lead to higher overall SNAP participation in the district.<br>
+                <strong>Negative Correlation:</strong> If points trend downward from left to right, it suggests that higher poverty rates are associated with lower SNAP participation.<br>
+                <strong>No Correlation:</strong> If points are scattered randomly, there's no clear relationship between poverty and SNAP participation.
+            </p>
+        </div>
+
+        <div class="info-section">
+            <div class="info-header">
+                <div class="chart-icon">✅</div>
+                <h2>About This Analysis</h2>
+            </div>
+
+            <div class="info-content">
+                <div class="info-item">
+                    <h3>Data Source</h3>
+                    <p>Congressional district-level data on SNAP participation and poverty rates, providing insights into the relationship between food assistance programs and economic need.</p>
+                </div>
+
+                <div class="info-item">
+                    <h3>Interactive Features</h3>
+                    <p>Hover over any point to see district details, click to highlight districts, and explore the correlation patterns across different regions.</p>
+                </div>
+
+                <div class="info-item">
+                    <h3>Policy Implications</h3>
+                    <p>Understanding this correlation helps policymakers design more effective food assistance programs and target resources to areas with the greatest need.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script>
+        // Show status
+        document.getElementById('status').textContent = 'D3.js loaded, version: ' + d3.version;
+
+        // Test data loading
+        console.log('Starting data load...');
+
+        d3.csv("data/congressional_district_data.csv")
+            .then(data => {
+                console.log('Data loaded successfully:', data);
+                document.getElementById('status').textContent = 'Data loaded: ' + data.length + ' districts';
+
+                // DATA FORMATTING
+                data.forEach(function (d) {
+                    d.hh_snap_pct = +d.hh_snap_pct;
+                    d.hh_poverty_pct_in_snap = +d.hh_poverty_pct_in_snap;
+                });
+
+                // Filter out any invalid data
+                const cleanData = data.filter(d => 
+                    !isNaN(d.hh_snap_pct) && 
+                    !isNaN(d.hh_poverty_pct_in_snap) &&
+                    d.hh_snap_pct > 0 &&
+                    d.hh_poverty_pct_in_snap > 0
+                );
+
+                console.log('Clean data:', cleanData);
+
+                // CHART MAKING
+                const width = 1200;
+                const height = 600;
+                const margin = { top: 40, right: 60, bottom: 80, left: 100 };
+                const chartWidth = width - margin.left - margin.right;
+                const chartHeight = height - margin.top - margin.bottom;
+
+                // Make our SVG canvas
+                var svg = d3
+                    .select("#scatterplot-int")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+                // Create x and y scales
+                const xScale = d3.scaleLinear()
+                    .domain([0, d3.max(cleanData, d => d.hh_poverty_pct_in_snap)])
+                    .range([0, chartWidth]);
+
+                const yScale = d3.scaleLinear()
+                    .domain([0, d3.max(cleanData, d => d.hh_snap_pct)])
+                    .range([chartHeight, 0]);
+
+                // Draw the plot
+                const circles = svg
+                    .append("g")
+                    .selectAll("circle")
+                    .data(cleanData)
+                    .enter()
+                    .append("circle")
+                    .attr("cx", function (d) {
+                        return xScale(d.hh_poverty_pct_in_snap);
+                    })
+                    .attr("cy", function (d) {
+                        return yScale(d.hh_snap_pct);
+                    })
+                    .attr("r", 6)
+                    .attr("fill", function(d) {
+                        return d.state === "New York" ? "#e74c3c" : "#3498db";
+                    })
+                    .attr("opacity", 0.7)
+                    .attr("stroke", "#2980b9")
+                    .attr("stroke-width", 1)
+                    .attr("class", function (d) {
+                        return d.state;
+                    })
+                    .on("mouseover", handleMouseOver)
+                    .on("mouseout", handleMouseOut)
+                    .on("click", handleClick);
+
+                // Draw axes
+                const xAxisGenerator = d3.axisBottom(xScale);
+                const xAxis = svg
+                    .append("g")
+                    .attr("transform", `translate(0,${chartHeight})`)
+                    .call(xAxisGenerator);
+
+                const yAxisGenerator = d3.axisLeft(yScale);
+                const yAxis = svg
+                    .append("g")
+                    .call(yAxisGenerator);
+
+                // Add axis labels
+                const xAxisLabel = xAxis
+                    .append("text")
+                    .attr("x", chartWidth / 2)
+                    .attr("y", margin.bottom - 10)
+                    .attr("fill", "#2c3e50")
+                    .html("Poverty Rate (%)")
+                    .style("font-size", "16px")
+                    .style("font-weight", "bold");
+
+                const yAxisLabel = yAxis
+                    .append("text")
+                    .attr("x", -chartHeight / 2)
+                    .attr("y", -margin.left + 20)
+                    .attr("fill", "#2c3e50")
+                    .text("SNAP Participation (%)")
+                    .style("transform", "rotate(-90deg)")
+                    .style("text-anchor", "middle")
+                    .style("font-size", "16px")
+                    .style("font-weight", "bold");
+
+                // Add trend line (optional - shows correlation direction)
+                const trendLine = d3.line()
+                    .x(d => xScale(d.hh_snap_pct))
+                    .y(d => yScale(d.hh_poverty_pct_in_snap));
+
+                // Calculate correlation coefficient
+                const correlation = calculateCorrelation(cleanData);
+                
+                // Add correlation info to the page
+                const correlationDiv = document.createElement('div');
+                correlationDiv.className = 'correlation-info';
+                correlationDiv.innerHTML = `
+                    <h3>📈 Correlation Analysis</h3>
+                    <p><strong>Correlation Coefficient:</strong> ${correlation.toFixed(3)}</p>
+                    <p><strong>Interpretation:</strong> ${interpretCorrelation(correlation)}</p>
+                `;
+                document.querySelector('.chart-section').appendChild(correlationDiv);
+
+                // Add some annotations for interesting points
+                const maxSnap = d3.max(cleanData, d => d.hh_snap_pct);
+                const maxPoverty = d3.max(cleanData, d => d.hh_poverty_pct_in_snap);
+                
+                // Find Puerto Rico (highest SNAP participation)
+                const puertoRico = cleanData.find(d => d.state === "Puerto Rico");
+                if (puertoRico) {
+                    svg.append("text")
+                        .attr("x", xScale(puertoRico.hh_poverty_pct_in_snap) + 10)
+                        .attr("y", yScale(puertoRico.hh_snap_pct))
+                        .style("text-anchor", "start")
+                        .attr("class", "annotation")
+                        .style("font-size", "12px")
+                        .style("fill", "#e74c3c")
+                        .style("font-weight", "bold")
+                        .html("Puerto Rico<br/>Highest SNAP participation");
+                }
+
+                                       // Define tooltip functions with access to scales and data
+                       function handleMouseOver(event, d) {
+                           d3.select(this).attr("r", 10).attr("opacity", 1);
+
+                           // Extract district number from congressional_district_name
+                           let districtNumber = "";
+                           if (d.congressional_district_name && d.congressional_district_name.includes("Congressional District")) {
+                               const match = d.congressional_district_name.match(/Congressional District (\d+)/);
+                               if (match) {
+                                   districtNumber = " " + match[1];
+                               }
+                           }
+
+                           // Create background box for tooltip
+                           const tooltipWidth = 140;
+                           const tooltipHeight = 80;
+                           const tooltipX = xScale(d.hh_poverty_pct_in_snap) - tooltipWidth/2;
+                           const tooltipY = yScale(d.hh_snap_pct) - 30;
+                           
+                           // Background rectangle with opacity
+                           svg.append("rect")
+                               .attr("x", tooltipX)
+                               .attr("y", tooltipY)
+                               .attr("width", tooltipWidth)
+                               .attr("height", tooltipHeight)
+                               .attr("rx", 8)
+                               .attr("ry", 8)
+                               .style("fill", "rgba(255, 255, 255, 0.95)")
+                               .style("stroke", "#bdc3c7")
+                               .style("stroke-width", 1)
+                               .attr("class", "tooltip");
+
+                           // District name (larger, bolder) - positioned inside the box
+                           svg.append("text")
+                               .attr("x", xScale(d.hh_poverty_pct_in_snap))
+                               .attr("y", yScale(d.hh_snap_pct) - 15)
+                               .text(d.state + districtNumber)
+                               .attr("text-anchor", "middle")
+                               .attr("class", "tooltip annotation")
+                               .style("font-size", "16px")
+                               .style("font-weight", "bold")
+                               .style("fill", "#2c3e50");
+
+                           // Poverty rate (clearer format) - positioned inside the box
+                           svg.append("text")
+                               .attr("x", xScale(d.hh_poverty_pct_in_snap))
+                               .attr("y", yScale(d.hh_snap_pct) + 5)
+                               .text(`Poverty: ${(d.hh_poverty_pct_in_snap * 100).toFixed(1)}%`)
+                               .attr("text-anchor", "middle")
+                               .attr("class", "tooltip annotation")
+                               .style("font-size", "12px")
+                               .style("font-weight", "500")
+                               .style("fill", "#e74c3c");
+
+                           // SNAP rate (clearer format) - positioned inside the box
+                           svg.append("text")
+                               .attr("x", xScale(d.hh_poverty_pct_in_snap))
+                               .attr("y", yScale(d.hh_snap_pct) + 25)
+                               .text(`SNAP: ${(d.hh_snap_pct * 100).toFixed(1)}%`)
+                               .attr("text-anchor", "middle")
+                               .attr("class", "tooltip annotation")
+                               .style("font-size", "12px")
+                               .style("font-weight", "500")
+                               .style("fill", "#3498db");
+                }
+
+                function handleMouseOut(event, d) {
+                    d3.select(this).attr("r", 6).attr("opacity", 0.7);
+                    svg.selectAll(".tooltip").remove();
+                }
+
+                function handleClick(event, d) {
+                    if (this.getAttribute("fill") === "#3498db") {
+                        d3.select(this).transition().duration(200).attr("fill", "#e74c3c");
+                    } else {
+                        d3.select(this).transition().duration(200).attr("fill", "#3498db");
+                    }
+                }
+
+                document.getElementById('status').textContent = 'Chart created successfully! Hover over points to see details.';
+                console.log('Chart created successfully!');
+
+            })
+            .catch(error => {
+                console.error('Error loading data:', error);
+                document.getElementById('status').textContent = 'ERROR: ' + error.message;
+                document.getElementById('scatterplot-int').innerHTML =
+                    '<p style="color: red; padding: 20px; text-align: center; font-size: 18px;">Error loading data: ' + error.message + '</p>';
+            });
+
+        // Calculate correlation coefficient
+        function calculateCorrelation(data) {
+            const n = data.length;
+            const sumX = d3.sum(data, d => d.hh_poverty_pct_in_snap);
+            const sumY = d3.sum(data, d => d.hh_snap_pct);
+            const sumXY = d3.sum(data, d => d.hh_poverty_pct_in_snap * d.hh_snap_pct);
+            const sumX2 = d3.sum(data, d => d.hh_poverty_pct_in_snap * d.hh_poverty_pct_in_snap);
+            const sumY2 = d3.sum(data, d => d.hh_snap_pct * d.hh_snap_pct);
+
+            const numerator = n * sumXY - sumX * sumY;
+            const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+            
+            return denominator !== 0 ? numerator / denominator : 0;
+        }
+
+        // Interpret correlation coefficient
+        function interpretCorrelation(correlation) {
+            const absCorr = Math.abs(correlation);
+            if (absCorr < 0.1) return "Very weak correlation";
+            if (absCorr < 0.3) return "Weak correlation";
+            if (absCorr < 0.5) return "Moderate correlation";
+            if (absCorr < 0.7) return "Strong correlation";
+            if (absCorr < 0.9) return "Very strong correlation";
+            return "Nearly perfect correlation";
+        }
+    </script>
+</body>
+</html>

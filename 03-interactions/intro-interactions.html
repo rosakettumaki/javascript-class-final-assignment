@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bar Chart</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      h1 {
+        margin-top: 3em;
+        color: yellowgreen;
+      }
+      h2 {
+        background-color: yellowgreen;
+        color: white;
+        display: inline-block;
+      }
+
+      code {
+        background: #fff880;
+      }
+
+      #container {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .snippet {
+        font-family:  'Courier New', Courier, monospace;
+      }
+
+      .tooltip {
+        fill: black;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <h1>Basic interactions</h1>
+      <p>Making interactive elements involves making use of the ways your mouse/keyboard/etc interacts with the webpage.</p>
+
+
+      <p>D3 has <a href="https://d3js.org/d3-selection/events">useful methods</a> that can listen for these events and adjust the chart accordingly. The logic broadly goes like this:</p>
+      
+      <pre><p class="snippet">[OBJECT TO INTERACTED WITH].on([EVENT], [FUNCTION DESCRIBING HOW OBJECT WILL CHANGE])
+      </p></pre>
+
+      <p><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Events">Events</a> describe ways a user can interact with a webpage: clicking somewhere, pressing a key, the browser resizing, etc.</p>
+      
+      <p>So we're giving the computer instructions on what an object should do/look like before an event happens, and what it should do/look like after that event happens.</p>
+
+      <p>Let's say we wanted to make a simple circle that gets bigger when you hover over it... </p>
+      
+      <pre><p class="snippet">const circle = d3.append("circle")
+        .attr("cx", 10)
+        .attr("cy", 10)
+        .attr("r", 2)
+        .on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut)
+      </p></pre>
+
+      <p>... then we'd need to write two functions: <span class="snippet">handleMouseOver</span>, which will describe how the circle radius will change when the mouse hovers over it, and <span class="snippet">handleMouseOut</span>, which describes changes to the radius when the mouse leaves the circle.</p>
+
+      <pre>
+        <p class="snippet">
+function handleMouseOver(event, d) = {
+      d3.select(this).attr("r", 5)
+      // console.log(event)
+      // console.log(d)
+    }
+
+function handleMouseOut(event, d) = {
+      d3.select(this).attr("r", 2)
+    }
+        </p>
+      </pre>
+
+      <p><span class="snippet">d3.select(this)</span> is sort of what it sounds like: a way to refer to the object that's interacting with the mouse.</p>
+
+      <p>The <span class="snippet">event</span> function input returns lots of data about the interaction, like where on the page the cursor was. <span class="snippet">d</span> is the same placeholder we've used to refer to the data that's been bounded to the object.</p>
+
+      <h2>Mouseover</h2>
+      <code>01-interaction.js</code>
+      <p>Change the color of the square when you hover over it</p>
+    <div id="interaction-1"></div>
+
+    <h2>Tooltips</h2>
+      <code>02-interaction.js</code>
+      <p>Add a tooltip with the name of the color on the square when you hover over it</p>
+    <div id="interaction-2"></div>
+
+    <h2>Clicks</h2>
+    <code>03-interaction.js</code>
+    <p>Change the color of a square when you click on it</p>
+    <div id="interaction-3"></div>
+  </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="01-interaction.js"></script>
+    <script src="02-interaction.js"></script>
+    <script src="03-interaction.js"></script>
+  </body>
+</html>

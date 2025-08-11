@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNAP Benefits Impact - Clean Version</title>
+    
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+        
+        /* Chart section */
+        .chart-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .chart-section h2 {
+            color: #34495e;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            font-size: 1.8rem;
+        }
+        
+        .chart-section p {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        /* Chart container */
+        #chart-space {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        /* Info box */
+        .info-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .info-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .info-box p {
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .chart-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>🍽️ SNAP Benefits Impact Analysis</h1>
+            <p class="subtitle">Understanding the impact of proposed policy changes on families across the United States</p>
+        </div>
+        
+        <!-- Main Chart Section -->
+        <div class="chart-section">
+            <h2>📊 State-by-State Impact</h2>
+            <p>
+                This visualization shows the estimated number of families (in thousands) that would lose some or all of their 
+                SNAP (Supplemental Nutrition Assistance Program) benefits under proposed policy changes. 
+                The data is sorted by impact, with states experiencing the highest number of affected families shown first.
+            </p>
+            <div id="chart-space"></div>
+        </div>
+        
+        <!-- Information Section -->
+        <div class="info-box">
+            <h3>📈 About This Visualization</h3>
+            <p><strong>What is SNAP?</strong> The Supplemental Nutrition Assistance Program provides food-purchasing assistance to low-income families and individuals.</p>
+            <p><strong>Data Source:</strong> Analysis of proposed policy changes and their estimated impact on SNAP benefits across all 50 states.</p>
+            <p><strong>Interactive Features:</strong> Hover over any bar to see the exact number of families affected in that state.</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="snap-bar-chart-working.js"></script>
+</body>
+</html>
